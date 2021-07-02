@@ -527,6 +527,20 @@ def recent_failures(db):
     data = cursor.fetchall()
     return render_template('failures.html', data=data, db_name=db)
 
+@app.route('/<db>/result/<eid>', methods=['GET', 'POST'])
+def eid_result(db=None, eid=None):
+    cursor = mysql.connection.cursor()
+    use_db(cursor, db)
+    cursor.execute("SELECT Execution_Html from TB_EXECUTION WHERE Execution_Id=%s;" % eid)
+    data = cursor.fetchall()
+
+    with open ("./templates/result.html", "w") as f:
+        f.truncate(0)
+        f.write(str(data[0][0]))
+        f.close()
+
+    return app.send_static_file('result.html')
+
 @app.route('/<db>/ttags/<eid>', methods=['GET', 'POST'])
 def eid_ttags(db, eid):
     cursor = mysql.connection.cursor()
