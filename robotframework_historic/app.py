@@ -534,7 +534,7 @@ def eid_result(db=None, eid=None):
     cursor.execute("SELECT Execution_Html from TB_EXECUTION WHERE Execution_Id=%s;" % eid)
     data = cursor.fetchall()
 
-    with open ("./templates/result.html", "w") as f:
+    with open ("/result.html", "w") as f:
         f.truncate(0)
         f.write(str(data[0][0]))
         f.close()
