@@ -92,7 +92,7 @@
                             </div>
                         {% endif %}                             
                         <form method="post" class="card">
-                            <input id="textField" name="search" type="search" class="form-control header-search" placeholder="Search by TestCase or Status or EID">
+                            <input id="textField" name="search" type="search" class="form-control header-search" placeholder="Search by TestCase or Status or EID or Description or Error">
                             <span class="input-icon-addon">
                                 <i class="fe fe-search"></i>
                             </span>
@@ -107,17 +107,20 @@
                                     <thead>
                                         <tr>
                                             <th>EID</th>
+					    <th>Description</th>
                                             <th>Suite - Test Case</th>
                                             <th>Status</th>
                                             <th>Time</th>
                                             <th>Error</th>
                                             <th>Comment</th>
+                                            <th>Result</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         {% for item in data %}
                                         <tr>
                                             <td>{{item[1]}}</td>
+					    <td>{{item[13]}}</td>
                                             <td style="word-wrap: break-word;max-width: 350px; white-space: normal; text-align: left;">
                                                 {{item[2]}}
                                             </td>
@@ -142,6 +145,7 @@
                                                     <b class="text-muted">Comment: </b>{{item[6]}}<br/>
                                                 {% endif %}
                                             </td>
+                                            <td style="color: black;"><head><a href="./result/{{item[1]}}">Result</a> </head></td>
                                         </tr>
                                         {% endfor %}
                                     </tbody>

@@ -560,7 +560,7 @@ def search(db):
         use_db(cursor, db)
         try:
             if search:
-                cursor.execute("SELECT * from TB_TEST WHERE Test_Name LIKE '%{name}%' OR Test_Status LIKE '%{name}%' OR Execution_Id LIKE '%{name}%' ORDER BY Execution_Id DESC LIMIT 500;".format(name=search))
+                cursor.execute("SELECT t.Test_Id, t.Execution_Id, t.Test_Name, t.Test_Status, t.Test_Time, t.Test_Error, t.Test_Comment, t.Test_Assigned_To, t.Test_ETA, t.Test_Review_By, t.Test_Issue_Type, t.Test_Tag, t.Test_Updated, e.Execution_Desc from TB_TEST AS t INNER JOIN TB_EXECUTION as e ON t.Execution_Id=e.Execution_Id WHERE t.Test_Name LIKE '%{name}%' OR t.Execution_Id LIKE '%{name}%' OR t.Test_Error LIKE '%{name}%' OR e.Execution_Desc LIKE '%{name}%' ORDER BY t.Execution_Id DESC LIMIT 500;".format(name=search))
                 data = cursor.fetchall()
                 return render_template('search.html', data=data, db_name=db, error_message="")
             else:
