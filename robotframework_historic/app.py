@@ -533,8 +533,10 @@ def eid_result(db=None, eid=None):
     use_db(cursor, db)
     cursor.execute("SELECT Execution_Html from TB_EXECUTION WHERE Execution_Id=%s;" % eid)
     data = cursor.fetchall()
-
-    with open ("./templates/result.html", "w") as f:
+    import os
+    dir_path = os.path.dirname(os.path.realpath(__file__))
+    with open (dir_path + "/templates/result.html", "w") as f:
+        print(f)
         f.truncate(0)
         f.write(str(data[0][0]))
         f.close()
