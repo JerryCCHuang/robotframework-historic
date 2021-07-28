@@ -536,7 +536,7 @@ def eid_result(db=None, eid=None):
     import os
     dir_path = os.path.dirname(os.path.realpath(__file__))
     with open (dir_path + "/templates/result.html", "w") as f:
-        print(f)
+        #print(f)
         f.truncate(0)
         f.write(str(data[0][0]))
         f.close()

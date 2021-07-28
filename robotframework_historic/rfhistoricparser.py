@@ -151,7 +151,10 @@ class TestMetrics(ResultVisitor):
             name = str(test.parent) + " - " + str(test)
 
         time = float("{0:.2f}".format(test.elapsedtime / float(60000)))
-        error = str(test.message)
+        if test.status == 'FAIL':
+            error = str(test.message)
+        else:
+            error = ''
         insert_into_test_table(self.db, self.id, str(name), str(test.status), time, error, str(test.tags))
 
 def get_time_in_min(time_str):
