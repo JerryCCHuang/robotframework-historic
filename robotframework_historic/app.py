@@ -10,6 +10,22 @@ app = Flask (__name__,
 
 mysql = MySQL(app)
 
+# Mapping table between DB name and Project_Name of TB_PROJECT
+project_map = {
+    'switch' : 'UISP-S Diagnostic',
+    'switchpro': 'UISP-S-PRO Diagnostic',
+    'power' : 'UISP-P Diagnostic',
+    'powerpro' : 'UISP-P-PRO Diagnostic',
+    'router' : 'UISP-R Diagnostic',
+    'routerpro' : 'UISP-R-PRO Diagnostic',
+    'switch_runtime' : 'UISP-S Runtime',
+    'switchpro_runtime': 'UISP-S-PRO Runtime',
+    'power_runtime' : 'UISP-P Runtime',
+    'powerpro_runtime' : 'UISP-P-PRO Runtime',
+    'router_runtime' : 'UISP-R Runtime',
+    'routerpro_runtime' : 'UISP-R-PRO Runtime'
+}
+
 @app.route('/')
 def index():
     return redirect(url_for('home'))
@@ -47,7 +63,8 @@ def delete_db(db):
     cursor = mysql.connection.cursor()
     cursor.execute("DROP DATABASE %s;" % db)
     # use_db(cursor, "robothistoric")
-    cursor.execute("DELETE FROM robothistoric.TB_PROJECT WHERE Project_Name='%s';" % db)
+    # cursor.execute("DELETE FROM robothistoric.TB_PROJECT WHERE Project_Name='%s';" % db)
+    cursor.execute("DELETE FROM robothistoric.TB_PROJECT WHERE DB_Name='%s';" % db)
     mysql.connection.commit()
     return redirect(url_for('home'))
 
@@ -59,11 +76,16 @@ def add_db():
         db_image = request.form['dbimage']
         cursor = mysql.connection.cursor()
 
+        if db_name in project_map.keys():
+            project_name = project_map[db_name]
+        else:
+            project_name = db_name
+
         try:
             # create new database for project
             cursor.execute("Create DATABASE %s;" % db_name)
             # update created database info in robothistoric.TB_PROJECT table
-            cursor.execute("INSERT INTO robothistoric.TB_PROJECT ( Project_Id, Project_Name, Project_Desc, Project_Image, Created_Date, Last_Updated, Total_Executions, Recent_Pass_Perc, Overall_Pass_Perc) VALUES (0, '%s', '%s', '%s', NOW(), NOW(), 0, 0, 0);" % (db_name, db_desc, db_image))
+            cursor.execute("INSERT INTO robothistoric.TB_PROJECT ( Project_Id, Project_Name, Project_Desc, Project_Image, Created_Date, Last_Updated, Total_Executions, Recent_Pass_Perc, Overall_Pass_Perc, DB_Name) VALUES (0, '%s', '%s', '%s', NOW(), NOW(), 0, 0, 0, '%s');" % (project_name, db_desc, db_image, db_name))
             # create tables in created database
             use_db(cursor, db_name)
             cursor.execute("Create table TB_EXECUTION ( Execution_Id INT NOT NULL auto_increment primary key, Execution_Date DATETIME, Execution_Desc TEXT, Execution_Total INT, Execution_Pass INT, Execution_Fail INT, Execution_Time FLOAT, Execution_STotal INT, Execution_SPass INT, Execution_SFail INT, Execution_Skip INT, Execution_SSkip INT, Execution_Html MEDIUMTEXT);")
